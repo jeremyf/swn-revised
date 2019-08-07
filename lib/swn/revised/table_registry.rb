@@ -7,12 +7,13 @@ module Swn
       option :source_directory
       option :registry, default: -> { Array.new }, reader: :private
 
-      def add(table:)
+      def register(table:)
         registry << table
       end
 
       def package!
         package_up_one_rolls!
+        package_up_planetary_tags!
       end
 
       private
@@ -31,6 +32,15 @@ module Swn
           end
           one_roll_table.package_up!
         end
+      end
+      def package_up_planetary_tags!
+        sub_tables = []
+        registry.each do |table|
+          next unless table.command.is_a?(Commands::PlanetaryTagCommand)
+          sub_tables << table
+        end
+        table = PlanetaryTagsTable.new(basename: "planetary-tag.tsv", extension: ".tsv", sub_tables: sub_tables)
+        table.write!
       end
     end
   end

@@ -1,12 +1,8 @@
 require 'dry-initializer'
 require 'swn/revised/table'
+require 'swn/revised/exceptions'
 module Swn
   module Revised
-    class RuntimeError < ::RuntimeError
-    end
-    class CommandProcessingError < RuntimeError
-    end
-
     module Commands
       class OneRollCommand
         extend Dry::Initializer
@@ -26,7 +22,7 @@ module Swn
           label_slugs = label_row.split(",")
           label_slugs.shift
           one_roll_label = label_slugs.join(",").strip
-          target_basename = "#{for_filename(type)}-#{for_filename(one_roll_label)}.tsv"
+          target_basename = "#{for_filename(type)}.#{for_filename(one_roll_label)}.tsv"
           table = OneRollSubtable.new(from_filename: from_filename, basename: target_basename, command: self, label: one_roll_label)
           table.open do |t|
             t.puts "# One Role Entry for: #{type} (#{one_roll_label})"
@@ -35,13 +31,13 @@ module Swn
               t.puts entry
             end
           end
-          table_registry.add(table: table)
+          table_registry.register(table: table)
         end
 
         private
 
         def for_filename(string)
-          string.strip.downcase.gsub(/\W+/,'-')
+          string.strip.downcase.gsub(/\W+/,'-').sub(/^-+/, '').sub(/-+$/, '')
         end
       end
     end

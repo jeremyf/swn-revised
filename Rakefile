@@ -1,7 +1,9 @@
 desc "Extract tables from EPUB.xhtml"
 task :extract_tables, [:filename] do |task, args|
-  filename = args.fetch(:filename, "")
   require 'nokogiri'
+  filename = args.fetch(:filename, nil)
+  raise "Expected filename for SWN Revised PDF" unless filename
+
   content = File.read(filename)
   doc = Nokogiri::HTML(content)
   counter = 0
@@ -42,3 +44,5 @@ task :convert_tables do
   require 'swn/revised'
   Swn::Revised.convert!
 end
+
+task default: [:extract_tables, :convert_tables]
