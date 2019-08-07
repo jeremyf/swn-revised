@@ -22,7 +22,7 @@ task :extract_tables, [:filename] do |task, args|
       table.css("tbody tr").each do |row|
         rows << row.text.strip.split(/[\t\n]+/)
       end
-      File.open(File.expand_path("../data/#{basename}.tsv", __FILE__), "w+") do |file|
+      File.open(File.expand_path("../data/extracted_tables/#{basename}.tsv", __FILE__), "w+") do |file|
         div_comments.each do |comment|
           file.puts "# #{comment}"
         end
@@ -35,4 +35,10 @@ task :extract_tables, [:filename] do |task, args|
       end
     end
   end
+end
+
+desc "Convert extracted tables"
+task :convert_tables do
+  require 'swn/revised'
+  Swn::Revised.convert!
 end

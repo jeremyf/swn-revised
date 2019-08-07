@@ -1,5 +1,6 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem 'rake', group: [:development]
-gem 'pry-byebug', group: [:development]
-gem 'nokogiri', group: [:development]
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+
+# Specify your gem's dependencies in gm-notepad.gemspec
+gemspec

@@ -1,2 +1,4 @@
 /epub
+/data/extracted_tables/*.tsv
+/data/converted/*.tsv
 /exe
